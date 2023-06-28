@@ -24,7 +24,7 @@
 
 String callmessage = "k04vcu Fox"; // your callsign goes here
 String morse = ""; // leave this blank for now; it will be filled in during setup
-float frequency = 145.300; // 146.565 is the normal TX frequency for foxes
+float frequency = 146.565; // 146.565 is the normal TX frequency for foxes
 byte bandwidth = 1; // Bandwidth, 0=12.5k, 1=25K
 byte squelch = 1; // Squelch 0-8, 0 is listen/open
 byte volume = 5; // Volume 1-8
@@ -38,7 +38,6 @@ byte volume = 5; // Volume 1-8
 SoftwareSerial ESerial(rx, tx);
 
 void setup(){
-  //SASerial.begin(9600, SERIAL_8N1, 20, 21); // Serial for SA868 using pins GPI20 (rx) & GPI21 (tx)
   ESerial.begin(9600);
   delay(1000);
 
@@ -48,31 +47,28 @@ void setup(){
   pinMode(PD_Pin, OUTPUT);
   pinMode(HL_Pin, OUTPUT);
   digitalWrite(PTT_Pin, HIGH); // LOW is TX, High is RX
-  digitalWrite(PD_Pin, LOW); // LOW is power off mode, HIGH to power up
-  digitalWrite(HL_Pin, HIGH); // LOW for low power, HIGH is for high power
+  digitalWrite(PD_Pin, HIGH); // LOW is power down mode, HIGH to power up
+  digitalWrite(HL_Pin, LOW); // LOW for low power, HIGH is for high power -- HIGH seems to cause issues.
   delay(3000);
   moduleInit();
-  moduleSetFreq();
-  moduleSetVol(5);
+  moduleSetFreq(frequency);
+  moduleSetVol(volume);
 }
 
 void loop(){
-  digitalWrite(PD_Pin, HIGH); // Power on the SA868
-  delay(5000); // wait 5 seconds for the SA868 to come up
-  
-  // Start transmission
-  digitalWrite(PTT_Pin, LOW); // Put the SA868 in TX mode
+    // digitalWrite(PD_Pin, HIGH);
+    // sleep(3000); // wait for the SA868 to come online
+    digitalWrite(PTT_Pin, LOW); // Put the SA868 in TX mode
 
-  delay(500); // Just a slight break before the tune
-  playMelody(); // Play the song
-  delay(750); // slight break between tune and morse
-  playMorse(); // Play the ID in morse
-      
-  digitalWrite(PTT_Pin, HIGH); // Put the SA868 in RX mode
-  // End Transmittion
-  digitalWrite(PD_Pin, LOW); // Power the SA868 back off to conserve battery
+    delay(500);
+    playMelody();
+    delay(750);
+    playMorse();
+        
+    digitalWrite(PTT_Pin, HIGH); // Put the SA868 in RX mode
+    // digitalWrite(PD_Pin, LOW); // shut off the SA868 to save power
 
-  delay(30000); // wait 30 seconds to allow cooldown of SA868
+    delay(30000); // wait 30 seconds to allow cooldown of SA868
 }
 
 void moduleInit(){
@@ -80,12 +76,12 @@ void moduleInit(){
   delay(500);
 };
 
-void moduleSetFreq(){
+void moduleSetFreq(float freq){
   String toSend="";
   toSend+="AT+DMOSETGROUP=1,";
-  toSend+=String(frequency,4);
+  toSend+=String(freq,4);
   toSend+=",";
-  toSend+=String(frequency,4);
+  toSend+=String(freq,4);
   toSend+=",";
   toSend+="0000,";
   toSend+="3,";
