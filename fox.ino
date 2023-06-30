@@ -56,18 +56,14 @@ void setup(){
 }
 
 void loop(){
-    // digitalWrite(PD_Pin, HIGH);
-    // sleep(3000); // wait for the SA868 to come online
     digitalWrite(PTT_Pin, LOW); // Put the SA868 in TX mode
 
-    delay(500);
+    delay(750);
     playMelody();
     delay(750);
     playMorse();
         
     digitalWrite(PTT_Pin, HIGH); // Put the SA868 in RX mode
-    // digitalWrite(PD_Pin, LOW); // shut off the SA868 to save power
-
     delay(30000); // wait 30 seconds to allow cooldown of SA868
 }
 
