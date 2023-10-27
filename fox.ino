@@ -22,9 +22,11 @@
 
 #include <SoftwareSerial.h> // ESP software serial for SA868 connection
 
-String callmessage = "k04vcu Fox"; // your callsign goes here
+String callmessage = "Fox Hunt"; // your callsign goes here
 String morse = ""; // leave this blank for now; it will be filled in during setup
 float frequency = 146.565; // 146.565 is the normal TX frequency for foxes
+int delayms = 30000; // delay between transmissions in milliseconds
+int initial_delay = 1000; // delay before transmissions start in milliseconds
 byte bandwidth = 1; // Bandwidth, 0=12.5k, 1=25K
 byte squelch = 1; // Squelch 0-8, 0 is listen/open
 byte volume = 5; // Volume 1-8
@@ -39,7 +41,7 @@ SoftwareSerial ESerial(rx, tx);
 
 void setup(){
   ESerial.begin(9600);
-  delay(1000);
+  delay(initial_delay);
 
   morse = createMorse(callmessage);
   
@@ -62,9 +64,9 @@ void loop(){
     playMelody();
     delay(750);
     playMorse();
-        
+    
     digitalWrite(PTT_Pin, HIGH); // Put the SA868 in RX mode
-    delay(30000); // wait 30 seconds to allow cooldown of SA868
+    delay(delayms); // wait 30 seconds to allow cooldown of SA868
 }
 
 void moduleInit(){

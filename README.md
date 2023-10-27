@@ -4,6 +4,10 @@ Much of this code was copied from / inspired by Yet Another Foxbox (YAFB) by Gre
 
 All credit for this project goes to Gregory Stoike; I just made his work simple enough for my own simple foxes.
 
+To update the firmware with a new frequency, delay, callsign, etc. simply open fox.ino in the arduino IDE and make the changes you want, then hold down the 'B' button on the XIAO controller while you plug it in. This puts the fox into boot-selector mode which prepares it to recieve a new firmware. hit upload on the Arduino IDE and once its done, hit the 'R' button on the XIAO controller to restart the fox with the new firmware.
+
+Holding 'B' while restarting the fox can also be used to halt transmissions while charging the fox via USB-C
+
 ## Hardware
 
 The hardware for this fox is (purposely) super simplistic. I wanted something that was minimal to make but could be expanded out by myself or others to do more than just the basic functionality of a fox.
