@@ -26,6 +26,10 @@ Right now this project is basically just a hodge-podge of others code brought to
 
 I tried to comment as liberally as possible because im hoping others can use this code to help their own SA868 projects. It's an awesome chip and deserves a lot more of a community than it currently has.
 
+## Libraries
+
+In order to build this you will need softwareserial.h. This can be found in the EspSoftwareSerial library contained in this repo. Simply move or copy the EspSoftwareSerial directory into the arduino libraries directory on your machine (~/Documents/Arduino/libraries/EspSoftwareSerial on MacOS)
+
 ## Contact
 
 If you found one of my foxes at a con and want help updating the firmware, or are just looking to build one of your own, please feel free to reach out to me on twitter!
