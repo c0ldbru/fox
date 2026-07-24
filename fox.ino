@@ -24,7 +24,7 @@
 
 String callmessage = "Fox Hunt"; // your callsign goes here
 String morse = ""; // leave this blank for now; it will be filled in during setup
-float frequency = 146.565; // 146.565 is the normal TX frequency for foxes
+float frequency = 147.420; // 147.420 is the normal DEFCON TX frequency for foxes
 int delayms = 30000; // delay between transmissions in milliseconds
 int initial_delay = 1000; // delay before transmissions start in milliseconds
 byte bandwidth = 1; // Bandwidth, 0=12.5k, 1=25K
