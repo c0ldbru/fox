@@ -85,12 +85,15 @@ All the variables for controlling common behavior are at the top of `fox.ino`:
 | `frequency` | 146.565 | TX frequency in MHz |
 | `delayms` | 30000 | Pause between transmissions (ms) — also lets the SA868 cool down |
 | `initial_delay` | 1000 | Delay before the first transmission (ms) |
+| `bandwidth` | 1 | SA868 bandwidth: 0 = 12.5 kHz, 1 = 25 kHz |
+| `squelch` | 1 | SA868 squelch, 0–8 (0 = open) |
 | `volume` | 5 | SA868 volume, 1–8 |
-
+| `debug` | false | Enable serial debug output over USB — leave off in the field |
+| `extended_word_gaps` | true | Longer pauses between morse words, easier copy for new players; false = standard 7-unit spacing |
 
 ### Libraries
 
-In order to build this you will need `SoftwareSerial.h`. This is provided by the **EspSoftwareSerial** library included in this repo — move or copy the `EspSoftwareSerial` directory into your Arduino libraries directory (`~/Documents/Arduino/libraries/` on macOS). This bundled version is the one the firmware was tested against.
+In order to build this you will need `SoftwareSerial.h`. This is provided by the **EspSoftwareSerial** library included in this repo — move or copy the `EspSoftwareSerial` directory into your Arduino libraries directory (`~/Documents/Arduino/libraries/` on macOS and Windows). This bundled version is the one the firmware was tested against.
 
 Alternatively, EspSoftwareSerial is available in the Arduino Library Manager, but newer versions there may behave differently than the bundled copy.
 
@@ -111,6 +114,17 @@ Last tested: September 8th 2026.
 
 **Tip:** holding **B** while resetting also works as a "pause switch" — it halts transmissions while charging over USB-C.
 
+
+## Change log
+
+**2026-09** — documentation and firmware polish. [LC-Linkous](https://github.com/LC-Linkous)
+- Fixed morse tone playing at 8 kHz instead of the intended 800 Hz — morse was quiet and indistinct on receivers, since 8 kHz falls outside the FM voice passband
+- Moved morse to LEDC channel 1 to stop colliding with `tone()` (melody) on channel 0, which logged `LEDC is not initialized` errors
+- `bandwidth` and `squelch` config variables are now applied to the SA868 (previously hardcoded; **note:** effective squelch changes from 3 to the config default of 1)
+- Added `debug` toggle for serial output and `extended_word_gaps` toggle for morse word spacing
+- Expanded README: BOM, wiring table, legal/operating notes, build instructions
+
+Firmware forked from [YAFB](https://github.com/N8HR/YAFB) by KN4CK, adapted for the XIAO ESP32C3 + SA868 by [@c0ldbru](https://twitter.com/c0ldbru), 2026 update post-con by [LC-Linkous](https://github.com/LC-Linkous).
 
 ## Contact
 

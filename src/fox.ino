@@ -30,6 +30,9 @@ int initial_delay = 1000; // delay before transmissions start in milliseconds
 byte bandwidth = 1; // Bandwidth, 0=12.5k, 1=25K
 byte squelch = 1; // Squelch 0-8, 0 is listen/open
 byte volume = 5; // Volume 1-8
+bool debug = false; // set true for Serial debug output over USB; leave false in the field
+bool extended_word_gaps = false; // true = extra-long pauses between words (easier copy for new players); 
+                                // false = standard 7-unit gaps
 
 #define PTT_Pin 5 // GPIO05 | D3 on XIAO
 #define PD_Pin 6 // GPIO06 | D4 on XIAO
@@ -40,6 +43,7 @@ byte volume = 5; // Volume 1-8
 SoftwareSerial ESerial(rx, tx);
 
 void setup(){
+  if (debug) Serial.begin(115200);
   ESerial.begin(9600);
   delay(initial_delay);
 
@@ -75,14 +79,18 @@ void moduleInit(){
 };
 
 void moduleSetFreq(float freq){
+  // AT+DMOSETGROUP=GBW,TFV,RFV,Tx_CTCSS,SQ,Rx_CTCSS
   String toSend="";
-  toSend+="AT+DMOSETGROUP=1,";
+  toSend+="AT+DMOSETGROUP=";
+  toSend+=(String)bandwidth;
+  toSend+=",";
   toSend+=String(freq,4);
   toSend+=",";
   toSend+=String(freq,4);
   toSend+=",";
   toSend+="0000,";
-  toSend+="3,";
+  toSend+=(String)squelch;
+  toSend+=",";
   toSend+="0000";
   toSend+="\r\n";
   ESerial.print(toSend);

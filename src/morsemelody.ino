@@ -24,7 +24,7 @@
 
 // ledc is used to create different tones
 int ledc_freq = 2000;
-int ledc_channel = 0;
+int ledc_channel = 1; // channel 1: tone() uses channel 0 for the melody, so keep morse off it
 int ledc_resolution = 8;
 
 // Notes and Frequencies
@@ -134,7 +134,7 @@ int ledc_resolution = 8;
  ******************************************************************************/
  
  /****************************************************************************** 
- * The playMelody fuction was adpated from:
+ * The playMelody function was adapted from:
  * https://github.com/robsoncouto/arduino-songs
  *                                                 
  * From https://github.com/robsoncouto/arduino-songs/blob/master/README.md
@@ -154,10 +154,10 @@ void playMelody()
   // Change this to make the song slower or faster
   int tempo = 140;
   
-  // Notes of the moledy followed by the duration
-  // A 4 means a quarter note, 8 an eighteenth , 16 sixteenth, so on
+  // Notes of the melody followed by the duration
+  // A 4 means a quarter note, 8 an eighth, 16 a sixteenth, so on
   // Negative numbers are used to represent dotted notes,
-  //  so -4 means a dotted quarter note, that is, a quarter plus an eighteenth!!
+  //  so -4 means a dotted quarter note, that is, a quarter plus an eighth!!
   int melody[] = 
   {
   NOTE_A4,16, NOTE_B4,16, NOTE_D5,16, NOTE_B4,16, NOTE_FS5,-8, NOTE_FS5,-8, NOTE_E5,-4,
@@ -197,7 +197,7 @@ void playMelody()
     // we only play the note for 90% of the duration, leaving 10% as a pause
     tone(Sound_Pin, melody[thisNote], noteDuration * 0.9);
 
-    // Wait for the specief duration before playing the next note.
+    // Wait for the specified duration before playing the next note.
     delay(noteDuration);
 
     // stop the waveform generation before the next note.
@@ -317,7 +317,7 @@ void playMorse()
    */
   
   int wpm = 13;
-  int morsetone = 800;
+  int morsetone = 800; // standard ~800 Hz morse sidetone, within the FM voice passband
   
   int wpmduration = (60000) / (wpm*50);
 
@@ -325,20 +325,20 @@ void playMorse()
   ledcAttachPin(Sound_Pin, ledc_channel);
 
   // convertedmessage
-  Serial.println("Playing morse start");
+  if (debug) Serial.println("Playing morse start");
   for (int i = 0; i < morse.length(); i++)
   {
     // only have . - / SPACE
     switch (morse.charAt(i))
     {
       case '.':
-        ledcWriteTone(ledc_channel, morsetone * 10);
+        ledcWriteTone(ledc_channel, morsetone);
         delay(1 * wpmduration);
         ledcWriteTone(ledc_channel, 0);
         delay(1 * wpmduration);
         break;
       case '-':
-        ledcWriteTone(ledc_channel, morsetone * 10);
+        ledcWriteTone(ledc_channel, morsetone);
         delay(3 * wpmduration);
         ledcWriteTone(ledc_channel, 0);
         delay(1 * wpmduration);
@@ -347,11 +347,16 @@ void playMorse()
         delay(2 * wpmduration);
         break;
       case '/':
-        delay(6 * wpmduration);
+        // A '/' lands between the two 2-unit letter-gap spaces, after the
+        // last element's 1-unit gap. Standard morse word spacing is 7 units
+        // total (1+2+2+2); the extended option stretches it to 11 (1+2+6+2),
+        // which gives newer players more time to copy between words.
+        if (extended_word_gaps) delay(6 * wpmduration);
+        else delay(2 * wpmduration);
         break;
     }
   }
 
-  Serial.println("Playing morse end");
+  if (debug) Serial.println("Playing morse end");
   ledcDetachPin(Sound_Pin);
 }
