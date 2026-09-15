@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+
+# Arduino / build artifacts
+build/
+*.hex
+*.bin
+*.elf
+*.map
+
+# Editor cruft
+*.swp
+.vscode/
+.idea/
